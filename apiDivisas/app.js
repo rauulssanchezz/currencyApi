@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 
+let saves = 0
+
 app.use(express.json())
 
 app.get('/', (req, res) => {
@@ -39,6 +41,16 @@ app.get('/eur', (req, res) => {
         eur = amount * 0.91
     }
     res.json({eur})
+})
+
+app.post('/saves', (req, res) => {
+    const {amount} = req.body
+    saves += amount
+    console.log("Amount save with success")
+})
+
+app.get('/saves', (req, res) => {
+    res.json({saves})
 })
 
 const PORT = 3000
