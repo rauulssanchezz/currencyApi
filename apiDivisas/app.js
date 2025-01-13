@@ -2,20 +2,21 @@ const express = require('express')
 const app = express()
 
 let saves = 0
+const currencies = ['dollar', 'pound', 'eur']
 
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.json({message: 'Success'})
-})
-
 app.get('/dollar',(req, res) => {
     const { amount, currency } = req.query
-    console.log({amount, currency})
+
+    if(!currencies.includes(currency)){
+        return res.json({message: 'Invalid currency'})
+    }
+
     let dollar = 0
-    if(currency === 'eur'){
+    if(currency === currencies[2]){
         dollar = amount * 1.2
-    }else if(currency === 'pound'){
+    }else if(currency === currencies[1]){
         dollar = amount * 1.3
     }
     res.json({dollar})
@@ -23,10 +24,15 @@ app.get('/dollar',(req, res) => {
 
 app.get('/pound', (req, res) => {
     const { amount, currency } = req.query
+
+    if(!currencies.includes(currency)){
+        return res.json({message: 'Invalid currency'})
+    }
+
     let pound = 0
-    if(currency === 'dollar'){
+    if(currency === currencies[0]){
         pound = amount * 0.77
-    }else if(currency === 'eur'){
+    }else if(currency === currencies[2]){
         pound = amount * 1.1
     }
     res.json({pound})
@@ -34,23 +40,54 @@ app.get('/pound', (req, res) => {
 
 app.get('/eur', (req, res) => {
     const { amount, currency } = req.query
+
+    if(!currencies.includes(currency)){
+        return res.json({message: 'Invalid currency'})
+    }
+
     let eur = 0
-    if(currency === 'dollar'){
+    if(currency === currencies[0]){
         eur = amount * 0.83
-    }else if(currency === 'pound'){
+    }else if(currency === currencies[1]){
         eur = amount * 0.91
     }
     res.json({eur})
 })
 
 app.post('/saves', (req, res) => {
-    const {amount} = req.body
-    saves += amount
-    console.log("Amount save with success")
+    const { amount, currency } = req.body
+
+    if(!currencies.includes(currency)){
+        return res.json({message: 'Invalid currency'})
+    }
+
+    if(currency === currencies[0]){
+        saves += amount * 0.77
+    }else if(currency === currencies[1]){
+        saves += amount * 1.3
+    }else{
+        saves += amount
+    }
+
+    res.json("Amount save with success")
 })
 
 app.get('/saves', (req, res) => {
-    res.json({saves})
+    const { currency } = req.query
+    let resSaves = saves
+    console.log({currency})
+    console.log({saves})
+    if(!currencies.includes(currency)){
+        return res.json({message: 'Invalid currency'})
+    }
+
+    if(currency === currencies[0]){
+        resSaves *= 0.77
+    }else if(currency === currencies[1]){
+        resSaves *= 1.3
+    }
+    console.log({resSaves})
+    res.json({resSaves})
 })
 
 const PORT = 3000

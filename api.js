@@ -1,11 +1,28 @@
-
 async function main(){
-    const baseUrl = 'http://localhost:3000/dollar'
-    const queryString = '?amount=100&currency=pound'
-    const url = baseUrl + queryString
+    const baseUrl = 'http://localhost:3000/saves'
+    const queryString = '?currency=pound'
+    let url = baseUrl
     let apiInfo
+    let saves = 0
     
-    const fetchApi = async (url) => {
+    const saveMoney = async (url) => {
+        await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                amount: 100,
+                currency: 'pound'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            apiInfo = data
+        })
+    } 
+
+    const getMoney = async (url) => {
         await fetch(url, {
             method: 'GET',
             headers: {
@@ -14,13 +31,17 @@ async function main(){
         })
         .then(response => response.json())
         .then(data => {
-            apiInfo = data
+            saves = data
         })
-    } 
-    
-    await fetchApi(url)
-    
+    }
+
+    await saveMoney(url)
     console.log({apiInfo})
+
+    url += queryString
+    await getMoney(url)
+    console.log({saves})
+    
 }
 
 main()
