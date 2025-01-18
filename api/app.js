@@ -94,5 +94,7 @@ app.get('/api/saves', (req, res) => {
     res.json({ resSaves })
 });
 
-// Export as serverless function
-module.exports = createServer(app)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
