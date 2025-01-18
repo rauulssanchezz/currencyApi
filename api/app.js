@@ -6,93 +6,93 @@ const currencies = ['USD', 'EUR', 'GBP']
 
 app.use(express.json())
 
-app.get('/USD',(req, res) => {
+// USD endpoint
+app.get('/api/USD', (req, res) => {
     const { amount, currency } = req.query
 
-    if(!currencies.includes(currency)){
-        return res.json({message: 'Invalid currency'})
+    if (!currencies.includes(currency)) {
+        return res.json({ message: 'Invalid currency' })
     }
 
-    let dollar = 0
-    if(currency === currencies[2]){
+    let dollar = 0;
+    if (currency === currencies[2]) {
         dollar = amount * 1.2
-    }else if(currency === currencies[1]){
+    } else if (currency === currencies[1]) {
         dollar = amount * 1.3
     }
-    res.json({dollar})
-})
+    res.json({ dollar })
+});
 
-app.get('/GBP', (req, res) => {
+// GBP endpoint
+app.get('/api/GBP', (req, res) => {
     const { amount, currency } = req.query
 
-    if(!currencies.includes(currency)){
-        return res.json({message: 'Invalid currency'})
+    if (!currencies.includes(currency)) {
+        return res.json({ message: 'Invalid currency' })
     }
 
-    let pound = 0
-    if(currency === currencies[0]){
+    let pound = 0;
+    if (currency === currencies[0]) {
         pound = amount * 0.77
-    }else if(currency === currencies[2]){
+    } else if (currency === currencies[2]) {
         pound = amount * 1.1
     }
-    res.json({pound})
-})
+    res.json({ pound })
+});
 
-app.get('/EUR', (req, res) => {
-    const { amount, currency } = req.query
+// EUR endpoint
+app.get('/api/EUR', (req, res) => {
+    const { amount, currency } = req.query;
 
-    if(!currencies.includes(currency)){
-        return res.json({message: 'Invalid currency'})
+    if (!currencies.includes(currency)) {
+        return res.json({ message: 'Invalid currency' })
     }
 
-    let eur = 0
-    if(currency === currencies[0]){
+    let eur = 0;
+    if (currency === currencies[0]) {
         eur = amount * 0.83
-    }else if(currency === currencies[1]){
+    } else if (currency === currencies[1]) {
         eur = amount * 0.91
     }
-    res.json({eur})
-})
+    res.json({ eur })
+});
 
-app.post('/saves', (req, res) => {
-    const { amount, currency } = req.body
+// Saves POST endpoint
+app.post('/api/saves', (req, res) => {
+    const { amount, currency } = req.body;
 
-    console.log({currency})
-    console.log({amount})
-
-    if(!currencies.includes(currency)){
-        return res.json({message: 'Invalid currency'})
+    if (!currencies.includes(currency)) {
+        return res.json({ message: 'Invalid currency' })
     }
 
-    if(currency === currencies[0]){
+    if (currency === currencies[0]) {
         saves += amount * 0.77
-    }else if(currency === currencies[1]){
+    } else if (currency === currencies[1]) {
         saves += amount * 1.3
-    }else{
-        saves += amount
+    } else {
+        saves += amount;
     }
 
-    res.json(`Amount save with success ${saves}`)
-})
+    res.json({ message: `Amount saved successfully`, saves })
+});
 
-app.get('/saves', (req, res) => {
-    const { currency } = req.query
+// Saves GET endpoint
+app.get('/api/saves', (req, res) => {
+    const { currency } = req.query;
     let resSaves = saves
-    console.log({saves})
-    if(!currencies.includes(currency)){
-        return res.json({message: 'Invalid currency'})
+
+    if (!currencies.includes(currency)) {
+        return res.json({ message: 'Invalid currency' })
     }
 
-    if(currency === currencies[0]){
+    if (currency === currencies[0]) {
         resSaves *= 0.77
-    }else if(currency === currencies[1]){
+    } else if (currency === currencies[1]) {
         resSaves *= 1.3
     }
-    console.log({resSaves})
-    res.json({resSaves})
-})
 
-const PORT = 3000
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
-})
+    res.json({ resSaves })
+});
+
+// Export as serverless function
+module.exports = createServer(app)
