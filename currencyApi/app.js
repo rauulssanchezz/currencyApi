@@ -2,11 +2,11 @@ const express = require('express')
 const app = express()
 
 let saves = 0
-const currencies = ['dollar', 'pound', 'eur']
+const currencies = ['USD', 'EUR', 'GBP']
 
 app.use(express.json())
 
-app.get('/dollar',(req, res) => {
+app.get('/USD',(req, res) => {
     const { amount, currency } = req.query
 
     if(!currencies.includes(currency)){
@@ -22,7 +22,7 @@ app.get('/dollar',(req, res) => {
     res.json({dollar})
 })
 
-app.get('/pound', (req, res) => {
+app.get('/GBP', (req, res) => {
     const { amount, currency } = req.query
 
     if(!currencies.includes(currency)){
@@ -38,7 +38,7 @@ app.get('/pound', (req, res) => {
     res.json({pound})
 })
 
-app.get('/eur', (req, res) => {
+app.get('/EUR', (req, res) => {
     const { amount, currency } = req.query
 
     if(!currencies.includes(currency)){
@@ -57,6 +57,9 @@ app.get('/eur', (req, res) => {
 app.post('/saves', (req, res) => {
     const { amount, currency } = req.body
 
+    console.log({currency})
+    console.log({amount})
+
     if(!currencies.includes(currency)){
         return res.json({message: 'Invalid currency'})
     }
@@ -69,13 +72,12 @@ app.post('/saves', (req, res) => {
         saves += amount
     }
 
-    res.json("Amount save with success")
+    res.json(`Amount save with success ${saves}`)
 })
 
 app.get('/saves', (req, res) => {
     const { currency } = req.query
     let resSaves = saves
-    console.log({currency})
     console.log({saves})
     if(!currencies.includes(currency)){
         return res.json({message: 'Invalid currency'})
